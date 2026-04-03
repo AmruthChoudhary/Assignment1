@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Assignment Management System
 
 A comprehensive web application for managing assignments between teachers and students. Built with Flask (Python), HTML, CSS, JavaScript, and SQLite database.
@@ -262,3 +263,6 @@ For issues and questions:
 ---
 
 **Happy Learning! 🎓**
+=======
+# Assignment
+>>>>>>> ee5c4054166696861a39c36c2660b3c766bf5a77
