@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Assignment - Assignment Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-upload me-2"></i>Submit Assignment
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Assignment Details -->
+                <div class="alert alert-info mb-4">
+                    <h6><i class="fas fa-info-circle me-2"></i>Assignment Details</h6>
+                    <p class="mb-2"><strong>Title:</strong> {{ assignment.title }}</p>
+                    <p class="mb-2"><strong>Subject:</strong> {{ assignment.subject }}</p>
+                    <p class="mb-2"><strong>Deadline:</strong> 
+                        <span class="badge bg-warning">{{ assignment.deadline.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </p>
+                    <p class="mb-2"><strong>Maximum Marks:</strong> {{ assignment.max_marks }}</p>
+                    {% if assignment.description %}
+                        <p class="mb-0"><strong>Description:</strong></p>
+                        <div class="mt-2 p-2 bg-light rounded">
+                            {{ assignment.description | nl2br }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Submission Form -->
+                <form method="POST" enctype="multipart/form-data" id="submitAssignmentForm">
+                    <div class="mb-4">
+                        <label for="submission_text" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>Submission Text (Optional)
+                        </label>
+                        <textarea class="form-control" id="submission_text" name="submission_text" rows="6" 
+                                  placeholder="Enter your assignment text, answers, or description here..."></textarea>
+                        <div class="form-text">You can write your assignment content here or upload a file (or both)</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="submission_file" class="form-label">
+                            <i class="fas fa-file-upload me-1"></i>Upload File (Optional)
+                        </label>
+                        <input type="file" class="form-control" id="submission_file" name="submission_file" 
+                               accept=".txt,.pdf,.png,.jpg,.jpeg,.gif,.doc,.docx,.zip,.rar">
+                        <div class="form-text">
+                            Upload your assignment file (PDF, DOC, Images, ZIP - Max 16MB)
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Important:</strong> Make sure to submit before the deadline. Late submissions are not allowed.
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('view_assignment', assignment_id=assignment.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Assignment
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Assignment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+document.getElementById('submitAssignmentForm').addEventListener('submit', function(e) {
+    const text = document.getElementById('submission_text').value.trim();
+    const file = document.getElementById('submission_file').files.length;
+    
+    if (!text && file === 0) {
+        e.preventDefault();
+        alert('Please either enter submission text or upload a file (or both).');
+        return false;
+    }
+    
+    // Confirm submission
+    if (!confirm('Are you sure you want to submit this assignment? You cannot modify it after submission.')) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// File size validation
+document.getElementById('submission_file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const maxSize = 16 * 1024 * 1024; // 16MB
+    
+    if (file && file.size > maxSize) {
+        alert('File size must be less than 16MB');
+        e.target.value = '';
+    }
+});
+</script>
+{% endblock %}
